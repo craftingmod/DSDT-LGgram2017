@@ -17,6 +17,9 @@ If (LOr(LLess(Arg0,1),LGreater(Arg0,5))) { Store(3,Arg0) }\n
 %1
 end;
 
+# [R] OS Check Fix
+into_all method code_regex If\s+\([\\]?_OSI\s+\(\"Linux\"\)\) replace_matched begin If(LOr(_OSI("Darwin"),_OSI("Linux"))) end;
+
 # [R] [sys] Fix Mutex with non-zero SyncLevel
 into_all all code_regex Mutex\s+\(([^,]*),\s+[^)]*\) replaceall_matched begin Mutex(%1, 0) end;
 into_all all code_regex Mutex\s+\(([^,]*),\s+[^)]*\) replaceall_matched begin Mutex(%1, 0) end;
