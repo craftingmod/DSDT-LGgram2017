@@ -1,0 +1,50 @@
+# import util - disabled
+#into definitionblock code_regex . insert
+#begin
+#External (RMKB, DeviceObj)\n
+#end;
+
+# var DLGT:Number = 0;
+# Define DLGT: Previous Brightness?
+# Define CPCT: Center value to compare
+into definitionblock code_regex Name\s+\(EVBR,\s+0x0140\) replace_matched begin
+Name (EVBR, 0x0140)\n
+Name (DLGT, Zero)\n
+end;
+
+# add Equal Method
+# 0x8 ~ 0x88 (Intel)
+# 0x80 ~ 0x88 (Or native)
+into method label _Q40 code_regex \\NTF0\s+\(0x80\) replace_matched begin
+\n
+Store (\\_SB.PCI0.LPCB.H_EC.LBRI, Local0) // Use local value \n
+Store (Zero, Local1) // determine Lightup - 1 Lightdown - 0 \n
+If (LEqual(Local0,DLGT)) {\n
+	// Already Min,Max\n
+	If(LGreater (Local0, 0x84)) {\n
+		// Light up\n
+		Store (One, Local1)\n
+	}Else{\n
+		// Light Down\n
+		Store (Zero, Local1)\n
+	}\n
+}Else{\n
+	If(LGreater (Local0,DLGT)){\n
+		// Light up\n
+		Store (One, Local1)\n
+	}Else{\n
+		// Light Down\n
+		Store (Zero, Local1)\n
+	}\n
+}\n
+If (LEqual(Local1, Zero)){\n
+	// Down\n
+    Notify(PS2K, 0x0405)\n
+}\n
+If (LEqual(Local1, One)){\n
+    // Up\n
+    Notify(PS2K, 0x0406)\n
+}\n
+Store (Local0, DLGT) // Dynamic Light \n
+\\NTF0 (0x80)
+end;

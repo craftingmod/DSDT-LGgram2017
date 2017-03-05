@@ -1,0 +1,151 @@
+#
+# LG Gram 2017 Battery patch
+# SSDT-14.dsl
+#
+
+#into scope label <label> : find scope
+# code_regex <string>,\+<num> : <string>,<spaces><num> (ABCD,  16)
+# replace_matched : replace
+# begin <str>,<num>,<str>,<num> : relay
+
+# Add API Method
+# B1B2: 16bit -> 8bit,8bit
+# B1B4: 32bit -> 8bit,8bit,8bit,8bit
+# L1L4: buffer?
+into definitionblock code_regex . insert
+begin
+    Method (B1B2, 2, NotSerialized)\n
+    {\n
+        Return (Or (Arg0, ShiftLeft (Arg1, 0x08)))\n
+    }\n
+\n
+    Method (B1B4, 4, NotSerialized)\n
+    {\n
+        Store (Arg3, Local0)\n
+        Or (Arg2, ShiftLeft (Local0, 0x08), Local0)\n
+        Or (Arg1, ShiftLeft (Local0, 0x08), Local0)\n
+        Or (Arg0, ShiftLeft (Local0, 0x08), Local0)\n
+        Return (Local0)\n
+    }\n
+\n
+    Method (L1L4, 4, NotSerialized)\n
+    {\n
+        Or (ShiftLeft (Arg1, 0x20), Arg0, Local0)\n
+        Or (ShiftLeft (Arg2, 0x40), Local0, Local0)\n
+        Or (ShiftLeft (Arg3, 0x60), Local0, Local0)\n
+        Return (Local0)\n
+    }\n
+end;
+
+# utility methods to read/write buffers from/to EC
+into method label RE1B parent_label \_SB.PCI0.LPCB.H_EC remove_entry;
+into method label RECB parent_label \_SB.PCI0.LPCB.H_EC remove_entry;
+into scope label \_SB.PCI0.LPCB.H_EC insert
+begin
+Method (RE1B, 1, NotSerialized)\n
+{\n
+    OperationRegion(ERAM, EmbeddedControl, Arg0, 1)\n
+    Field(ERAM, ByteAcc, NoLock, Preserve) { BYTE, 8 }\n
+    Return(BYTE)\n
+}\n
+Method (RECB, 2, Serialized)\n
+// Arg0 - offset in bytes from zero-based EC\n
+// Arg1 - size of buffer in bits\n
+{\n
+    ShiftRight(Add(Arg1,7), 3, Arg1)\n
+    Name(TEMP, Buffer(Arg1) { })\n
+    Add(Arg0, Arg1, Arg1)\n
+    Store(0, Local0)\n
+    While (LLess(Arg0, Arg1))\n
+    {\n
+        Store(RE1B(Arg0), Index(TEMP, Local0))\n
+        Increment(Arg0)\n
+        Increment(Local0)\n
+    }\n
+    Return(TEMP)\n
+}\n
+end;
+##################################
+
+# Offset 0x9E , BMFG
+# BMFG -> BMFX
+into scope label \_SB.PCI0.LPCB.H_EC code_regex (BMFG,)\s+(72), replace_matched begin BMFX,%2, //%1%2 end;
+# use helper method
+into method label XBIF code_regex \(BMFG, replaceall_matched begin (RECB(0x9E,72), end;
+
+# BDC
+# BDC -> DC0,DC1
+into scope label \_SB.PCI0.LPCB.H_EC code_regex BDC,\s+16, replace_matched begin
+DC0,8,\nDC1,8,
+end;
+# use B1B2
+into method label XBIF code_regex \(BDC, replaceall_matched begin (B1B2(DC0,DC1), end;
+
+# BFC
+# BFC -> FC0,FC1
+into scope label \_SB.PCI0.LPCB.H_EC code_regex BFC,\s+16, replace_matched begin
+FC0,8,\nFC1,8,
+end;
+# use B1B2
+into method label XBIF code_regex \(BFC, replaceall_matched begin (B1B2(FC0,FC1), end;
+into method label XBST code_regex \(BFC, replaceall_matched begin (B1B2(FC0,FC1), end;
+
+# BDV
+# BDV -> DV0,DV1
+into scope label \_SB.PCI0.LPCB.H_EC code_regex BDV,\s+16, replace_matched begin
+DV0,8,\nDV1,8,
+end;
+# use B1B2
+into method label XBIF code_regex \(BDV, replaceall_matched begin (B1B2(DV0,DV1), end;
+
+# BDWC is ignoreable
+# BDLC is ignoreable
+
+# BSN
+# BSN -> SN0,SN1
+into scope label \_SB.PCI0.LPCB.H_EC code_regex BSN,\s+16, replace_matched begin
+SN0,8,\nSN1,8,
+end;
+# use B1B2
+into method label XBIF code_regex \(BSN, replaceall_matched begin (B1B2(SN0,SN1), end;
+
+# BPR
+# BPR -> PR0,PR1
+into scope label \_SB.PCI0.LPCB.H_EC code_regex BPR,\s+16, replace_matched begin
+PR0,8,\nPR1,8,
+end;
+# use B1B2
+into method label XBST code_regex \(BPR, replaceall_matched begin (B1B2(PR0,PR1), end;
+
+# BRC
+# BRC -> RC0,RC1
+into scope label \_SB.PCI0.LPCB.H_EC code_regex BRC,\s+16, replace_matched begin
+RC0,8,\nRC1,8,
+end;
+# use B1B2
+into method label XBST code_regex \(BRC, replaceall_matched begin (B1B2(RC0,RC1), end;
+
+# BPV
+# BPV -> PV0,PV1
+into scope label \_SB.PCI0.LPCB.H_EC code_regex BPV,\s+16, replace_matched begin
+PV0,8,\nPV1,8,
+end;
+# use B1B2
+into method label XBST code_regex \(BPV, replaceall_matched begin (B1B2(PV0,PV1), end;
+
+# CYC1
+# CYC1 -> YC0,YC1
+into scope label \_SB.PCI0.LPCB.H_EC code_regex CYC1,\s+16, replace_matched begin
+YC0,8,\nYC1,8,
+end;
+# use B1B2
+into method label XBIX code_regex \(CYC1, replaceall_matched begin (B1B2(YC0,YC1), end;
+
+# ALS
+# ALS -> LS0,LS1
+into scope label \_SB.PCI0.LPCB.H_EC code_regex ALS,\s+16 replace_matched begin
+LS0,8,\nLS1,8
+end;
+# use B1B2
+into method label GLUX code_regex \(\\_SB.PCI0.LPCB.H_EC.ALS, replaceall_matched begin (B1B2(\\_SB.PCI0.LPCB.H_EC.LS0,\\_SB.PCI0.LPCB.H_EC.LS1), end;
+into method label _Q67 code_regex \(ALS, replaceall_matched begin (B1B2(LS0,LS1), end;

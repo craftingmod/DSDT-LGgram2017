@@ -1,0 +1,64 @@
+# https://github.com/RehabMan/Laptop-DSDT-Patch
+# PNLF Support
+# LG Gram 2017
+
+# Rename exists
+into definitionblock code_regex PNLF,\s+16, replace_matched begin
+PNLP,16
+end;
+into_all method label _INI code_regex \(PNLF, replaceall_matched begin \(PNLP, end;
+
+# Original code
+into_all device label PNLF remove_entry;
+
+into definitionblock code_regex . insert
+begin
+Scope (_SB)\n
+{\n
+    Device (PNLF)\n
+    {\n
+        Name (_ADR, Zero)\n
+        Name (_HID, EisaId ("APP0002"))\n
+        Name (_CID, "backlight")\n
+        Name (_UID, 10)\n
+        Name (_STA, 0x0B)\n
+    }\n
+}\n
+end;
+
+# to avoid conflict with root scope PNLF
+into_all method code_regex Store\s+\(PNLF,\s+(.*)\) replaceall_matched begin Store(\\PNLF, %1) end;
+
+# Add Config
+into device label PNLF insert
+begin
+Method(RMCF)\n
+{\n
+    Return(Package()\n
+    {\n
+        "PWMMax", 0,\n
+        "BacklightMin", 40,\n
+        "BacklightLevels", Package()\n
+        {\n
+        Package(){}, // empty package indicates array follows (instead of dictionary)\n
+            24,\n
+            27, 39, 44, 50,\n
+            58, 67, 77, 88,\n
+            101, 115, 130, 147,\n
+            165, 184, 204, 226,\n
+            249, 273, 299, 326,\n
+            354, 383, 414, 446,\n
+            479, 514, 549, 587,\n
+            625, 665, 706, 748,\n
+            791, 836, 882, 930,\n
+            978, 1028, 1079, 1132,\n
+            1186, 1241, 1297, 1355,\n
+            1414, 1474, 1535, 1598,\n
+            1662, 1728, 1794, 1862,\n
+            1931, 2002, 2074, 2147,\n
+            2221, 2296, 2373, 2452,\n
+            2531, 2612, 2694, 0xad9,\n
+        }\n
+    })\n
+}\n
+end;

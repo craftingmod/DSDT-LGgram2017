@@ -1,0 +1,42 @@
+# DSDT
+into definitionblock code_regex External\s+\(BNUM,\s+UnknownObj\) remove_matched;
+into definitionblock code_regex External\s+\(RTIP,\s+UnknownObj\) remove_matched;
+
+# SSDT-0
+into_all method label _BST code_regex LPCB.H_EC.BAT1 replaceall_matched begin
+LPCB.H_EC.CMB0
+end;
+into_all method label _BIX code_regex LPCB.H_EC.BAT1 replaceall_matched begin
+LPCB.H_EC.CMB0
+end;
+into definitionblock code_regex LPCB.H_EC.BAT1 replaceall_matched begin
+LPCB.H_EC.CMB0
+end;
+
+into_all method label _BIX code_regex Return\s+\(Package\s+\(0x14\) replaceall_matched begin
+Return (Package (Zero){})
+end;
+into_all method label _BIX code_regex \{\s+Zero, replaceall_matched begin
+\/* { Zero,
+end;
+into_all method label _BIX code_regex \"0\"\s+\}\) replaceall_matched begin
+"0"}) *\/
+end;
+
+# SSDT-15
+# \_SB.SGOV (0x02010016, PGCE)
+into_all method label _DSM code_regex \\_SB.SGOV\s+\(0x02010016,\s+PGCE\) replaceall_matched begin
+Store (\\_SB.SGOV (0x02010016), PGCE)
+end;
+# \_SB.GGOV (0x02010016)    OLDV
+into_all method label _DSM code_regex \\_SB.GGOV\s+\(0x02010016\)\s+OLDV replaceall_matched begin
+Store (\\_SB.GGOV (0x02010016), OLDV)
+end;
+# \_SB.GGOV (0x02010014) DFUE
+into_all method label _DSM code_regex \\_SB.GGOV\s+\(0x02010014\)\s+DFUE replaceall_matched begin
+Store (\\_SB.GGOV (0x02010014), DFUE)
+end;
+# \_SB.GGOV (0x02010014)    OLDV
+into_all method label _DSM code_regex \\_SB.GGOV\s+\(0x02010014\)\s+OLDV replaceall_matched begin
+Store (\\_SB.GGOV (0x02010014), OLDV)
+end;

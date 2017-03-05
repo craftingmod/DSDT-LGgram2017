@@ -1,0 +1,3 @@
+# DSDT
+into definitionblock code_regex External\s+\(BNUM,\s+UnknownObj\) remove_matched;
+into definitionblock code_regex External\s+\(RTIP,\s+UnknownObj\) remove_matched;
