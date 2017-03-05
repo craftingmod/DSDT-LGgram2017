@@ -10,6 +10,7 @@
 into definitionblock code_regex Name\s+\(EVBR,\s+0x0140\) replace_matched begin
 Name (EVBR, 0x0140)\n
 Name (DLGT, Zero)\n
+Name (BMAX, Zero)
 end;
 
 # add Equal Method
@@ -21,7 +22,7 @@ Store (\\_SB.PCI0.LPCB.H_EC.LBRI, Local0) // Use local value \n
 Store (Zero, Local1) // determine Lightup - 1 Lightdown - 0 \n
 If (LEqual(Local0,DLGT)) {\n
 	// Already Min,Max\n
-	If(LGreater (Local0, 0x84)) {\n
+	If(LGreaterEqual (Local0, BMAX)) {\n
 		// Light up\n
 		Store (One, Local1)\n
 	}Else{\n
@@ -37,13 +38,16 @@ If (LEqual(Local0,DLGT)) {\n
 		Store (Zero, Local1)\n
 	}\n
 }\n
+If(LGreater (Local0,BMAX)){\n
+    Store (Local0,BMAX)\n
+}\n
 If (LEqual(Local1, Zero)){\n
 	// Down\n
-    Notify(PS2K, 0x10)\n
+    Notify(PS2K, 0x20)\n
 }\n
 If (LEqual(Local1, One)){\n
     // Up\n
-    Notify(PS2K, 0x20)\n
+    Notify(PS2K, 0x10)\n
 }\n
 Store (Local0, DLGT) // Dynamic Light \n
 \\NTF0 (0x80)
