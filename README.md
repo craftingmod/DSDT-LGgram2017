@@ -8,3 +8,4 @@ MaciASL에 추가하는 방법
 - [+] button 클릭
 - 이름을 준다 (예시. "Heroes of the storm")
 - URL 입력: http://raw.github.com/craftingmod/DSDT_LGgram2017/master
+- 해도 안됩니다
