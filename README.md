@@ -7,5 +7,4 @@ MaciASL에 추가하는 방법
 - Sources 클릭
 - [+] button 클릭
 - 이름을 준다 (예시. "Heroes of the storm")
-- URL 입력: http://raw.github.com/craftingmod/DSDT_LGgram2017/master
-- 해도 안됩니다
+- URL 입력: https://raw.githubusercontent.com/craftingmod/DSDT-LGgram2017/master
