@@ -1,7 +1,6 @@
-[Desc] DSDT from Clover only     NullPatch.txt
-[Desc] LG Gram 2017 (20170305)   NullPatch.txt
------------------------------    NullPatch.txt
-[dsdt] --> To apply DSDT         NullPatch.txt
+[Desc] DSDT from Clover only      NullPatch.txt
+[Desc] LG Gram 2017 (20170305)    NullPatch.txt
+[dsdt] ---> To apply DSDT         NullPatch.txt
 [1] Compile Error Fix         patch/1_DSDT_compileFix.txt
 [2] General Patch to Laptop   patch/2_DSDT_generic_patch.txt
 [3] Usb Fix (from xps 9360)   patch/3_DSDT_usbWakeFix.txt
@@ -9,19 +8,15 @@
 [5] Add NullEthernet          patch/5_DSDT_NullEthernet.txt
 [6] Clover Hotpatch           patch/6_DSDT_CloverApply.txt
 [7] GFX0 to IGPU (dangerous)  patch/7_DSDT_SSDT_0_1_14_IGPU.txt
------------------------------    NullPatch.txt
-[ssdt0] --> To apply SSDT-0      NullPatch.txt
+[ssdt0] ---> To apply SSDT-0      NullPatch.txt
 [1] Compile Error Fix         patch/1_SSDT0_compileFix.txt
 [7] GFX0 to IGPU              patch/7_DSDT_SSDT_0_1_14_IGPU.txt
------------------------------    NullPatch.txt
-[ssdt1] --> To apply SSDT-1      NullPatch.txt
+[ssdt1] ---> To apply SSDT-1      NullPatch.txt
 [7] GFX0 to IGPU              patch/7_DSDT_SSDT_0_1_14_IGPU.txt
------------------------------    NullPatch.txt
-[ssdt14] --> To apply SSDT-14    NullPatch.txt
+[ssdt14] ---> To apply SSDT-14    NullPatch.txt
 [7] GFX0 to IGPU              patch/7_DSDT_SSDT_0_1_14_IGPU.txt
 [8] Battery Patch             patch/8_SSDT14_BatterySupport.txt
 [9] Brightness Fn (Voodoo)    patch/9_SSDT14_BrightFN_Voodoo.txt
 [9] Brightness Fn (Touchpad)  patch/9_SSDT14_BrightFN_Touchpad.txt
------------------------------    NullPatch.txt
-[ssdt15] --> To apply SSDT-15    NullPatch.txt
+[ssdt15] ---> To apply SSDT-15    NullPatch.txt
 [1] Compile Error Fix         patch/1_SSDT15_compileFix.txt
