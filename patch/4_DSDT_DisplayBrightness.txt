@@ -4,7 +4,7 @@
 
 # Rename exists
 into definitionblock code_regex PNLF,\s+16, replace_matched begin
-PNLP,16
+PNLP,16,
 end;
 into_all method label _INI code_regex \(PNLF, replaceall_matched begin \(PNLP, end;
 
