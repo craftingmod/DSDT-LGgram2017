@@ -1,0 +1,31 @@
+# Add dummy method
+into definitionblock code_regex . insert
+begin
+Name(TGLD, One)\n
+Method (PLED, 0, NotSerialized)\n
+{\n
+    If (LGreaterEqual (TGLD, One)){\n
+        Store (Zero, TGLD)\n
+    }Else{\n
+        Store (One, TGLD)\n
+    }\n
+    \_SB.PCI0.LPCB.H_EC.MAP1.TLED (TGLD)\n
+}\n
+end;
+
+# Replacing method _QFF (?) 
+into Method label _QFF replace_content begin 
+             PLED()\n
+end;
+# Replacing method _Q36 (F6) 
+into Method label _Q36 replace_content begin 
+             PLED()\n
+end;
+# Replacing method _Q37 (F6) 
+into Method label _Q37 replace_content begin 
+             PLED()\n
+end;
+# Replacing method _Q72 (F6) 
+into Method label _Q72 replace_content begin 
+             PLED()\n
+end;
