@@ -1,6 +1,6 @@
 [a_Desc] DSDT from Clover only      	NullPatch.txt
 [a_Desc] LG Gram 2017 (20170305)    	NullPatch.txt
-[dsdt]------------------------------	NullPatch.txt
+[dsdt] -----------------------------	NullPatch.txt
 [dsdt] [0] ---> To apply DSDT       	NullPatch.txt
 [dsdt] [1] Compile Error Fix        	patch/1_DSDT_compileFix.txt
 [dsdt] [2] General Patch to Laptop  	patch/2_DSDT_generic_patch.txt
