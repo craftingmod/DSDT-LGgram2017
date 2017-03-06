@@ -1,0 +1,37 @@
+#Maintained by: RehabMan for: ACPIKeyboard.kext
+# DSDT add device
+
+# This patch serves to provide a catalyst to load ACPIKeyboard.kext
+# and it also provides a sink to send notifications to in
+# order to send messages to the kext to simulate keystrokes.
+
+into device label RMKB remove_entry;
+into definitionblock code_regex . insert
+begin
+Device (RMKB)\n
+{\n
+    Name(_HID, "RMKB0000")\n
+}\n
+end;
+
+# SSDT-14
+
+# import device
+into definitionblock code_regex . insert
+begin
+    External (RMKB, DeviceObj)\n
+end;
+
+# Replace method
+into method label BRDN replace_content
+begin
+    Notify(\RMKB, 0x114f)\n
+    Notify(\RMKB, 0x124f)\n
+end;
+
+into method label BRUP replace_content
+begin
+    Notify(\RMKB, 0x114d)\n
+    Notify(\RMKB, 0x124d)\n
+end;
+

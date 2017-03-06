@@ -1,0 +1,76 @@
+#
+# This patch must REQUIRE to use brightness key!
+#
+
+# var DLGT:Number = 0;
+# Define DLGT: Previous Brightness?
+# Define CPCT: Center value to compare
+into definitionblock code_regex Name\s+\(EVBR,\s+0x0140\) replace_matched begin
+Name (EVBR, 0x0140)\n
+Name (DLGT, Zero)\n
+Name (BMAX, Zero)
+end;
+
+# add Equal Method
+# 0x8 ~ 0x88 (Intel)
+# 0x80 ~ 0x88 (Or native)
+into method label _Q40 code_regex \\NTF0\s+\(0x80\) replace_matched begin
+\n
+Store (\\_SB.PCI0.LPCB.H_EC.LBRI, Local0) // Use local value \n
+Store (Zero, Local1) // determine Lightup - 1 Lightdown - 0 \n
+If (LEqual(Local0,DLGT)) {\n
+	// Already Min,Max\n
+	If(LGreaterEqual (Local0, BMAX)) {\n
+		// Light up\n
+		Store (One, Local1)\n
+	}Else{\n
+		// Light Down\n
+		Store (Zero, Local1)\n
+	}\n
+}Else{\n
+	If(LGreater (Local0,DLGT)){\n
+		// Light up\n
+		Store (One, Local1)\n
+	}Else{\n
+		// Light Down\n
+		Store (Zero, Local1)\n
+	}\n
+}\n
+If(LGreater (Local0,BMAX)){\n
+    Store (Local0,BMAX)\n
+}\n
+If (LEqual(Local1, Zero)){\n
+	// Down\n
+    BRDN()\n
+}\n
+If (LEqual(Local1, One)){\n
+    // Up\n
+    BRUP()\n
+}\n
+Store (Local0, DLGT) // Dynamic Light \n
+\\NTF0 (0x80)
+end;
+
+# Windows Mode
+# Q50: Down?
+into method label _Q50 replace_content begin
+    BRDN()\n
+end;
+# Q51: Up?
+into method label _Q51 replace_content begin
+    BRUP()\n
+end;
+
+# Add Method
+# import device
+into definitionblock code_regex . insert
+begin
+    Method (BRDN, 0, NotSerialized)// down\n
+    { \n
+        
+    }\n
+    Method (BRUP, 0, NotSerialized)// up\n
+    { \n
+       
+    }\n
+end;

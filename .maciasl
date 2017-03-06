@@ -20,8 +20,9 @@
 [ssdt14] ---> To apply SSDT-14      	NullPatch.txt
 [ssdt14] [7] GFX0 to IGPU           	patch/7_DSDT_SSDT_0_1_14_IGPU.txt
 [ssdt14] [8] Battery Patch          	patch/8_SSDT14_BatterySupport.txt
-[ssdt14] [9] Brightness Fn(Voodoo)  	patch/9_SSDT14_BrightFN_Voodoo.txt
-[ssdt14] [9] Brightness Fn(Touchpad)	patch/9_SSDT14_BrightFN_Touchpad.txt
+[ssdt14] [9] BrightFn Base(required)	patch/9_SSDT14_BrightFN_Base.txt
+[ssdt14] [9] Bright FnKey - Touchpad	patch/9_SSDT14_BrightFN_Touchpad.txt
+[ssdt14] [9] Bright FnKey - Voodoo  	patch/9_SSDT14_BrightFN_Voodoo.txt
 [ssdt14] [10] Cleanup dummy Fn      	patch/10_SSDT14_DummyFN.txt
 [ssdt15] ---------------------------	NullPatch.txt
 [ssdt15] ---> To apply SSDT-15      	NullPatch.txt
